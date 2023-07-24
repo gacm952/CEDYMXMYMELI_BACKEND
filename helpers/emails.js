@@ -1,9 +1,32 @@
 import nodemailer from "nodemailer";
+import sgMail from '@sendgrid/mail';
+sgMail.setApiKey('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')
+
 
 export const emailRegistro = async (Userdata) => {
 
     const { email, name, token } = Userdata;
 
+    const msg = {
+      to: email, // Change to your recipient
+      from: 'contacto@cedym.com', // Change to your verified sender
+      subject: 'aSending with SendGrid is Fun',
+      text: 'anad easy to do anywhere, even with Node.js',
+      html: '<strong>and eaasy to do anywhere, even with Node.js</strong>',
+    }
+    
+    sgMail
+    .send(msg)
+    .then((response) => {
+    console.log(response[0].statusCode)
+    console.log(response[0].headers)
+    })
+    .catch((error) => {
+    console.error(error)
+    })
+
+    
+/*
     const transport = nodemailer.createTransport({
         host: process.env.EMAIL_HOST, 
         port: process.env.EMAIL_PORT,
@@ -29,7 +52,7 @@ export const emailRegistro = async (Userdata) => {
                   </div>
               </section>   
     `
-          })
+          }) */
 
 };
 
