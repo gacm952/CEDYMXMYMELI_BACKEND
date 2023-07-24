@@ -33,8 +33,6 @@ export const emailRegistro = async (Userdata) => {
 
 };
 
-emailRegistro({email: "serialoxy@gmail.com", name: "David", token: "123"})
-
 export const emailForgotPassword = async (Userdata) => {
 
   const { email, name, token } = Userdata;
