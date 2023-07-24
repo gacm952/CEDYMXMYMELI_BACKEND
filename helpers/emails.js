@@ -2,14 +2,14 @@ import nodemailer from "nodemailer";
 
 export const emailRegistro = async (Userdata) => {
 
-    const { email, name } = Userdata;
+    const { email, name, token } = Userdata;
  
     const transport = nodemailer.createTransport({
-      host: "smtp.sendgrid.net", 
-      port: 465,
+      host: process.env.EMAIL_HOST, 
+      port: process.env.EMAIL_PORT,
       auth: {
-        user: "apikey",
-        pass: "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"
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
       },
     });
 
@@ -24,7 +24,7 @@ export const emailRegistro = async (Userdata) => {
         <div style="max-width: 600px; padding: 20px; background-color: #ffffff; border-radius: 10px; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); text-align: center; display: flex; flex-direction: column; align-items: center; border-top: 5px solid #16a34a;">
            <h2 style="font-size: 24px; font-weight: bold; margin-bottom: 20px;">¡Hola ${name}"!</h2>
            <p style="font-size: 16px; margin-left: 20px; margin-right: 20px;">Tu registro ya casi está listo, solo debes confirmarlo con el siguiente enlace:</p>
-           <p style="font-size: 16px; margin-bottom: 20px;"><a href="#" style="background-color: #16a34a; color: #ffffff; font-size: 16px; text-decoration: none; padding: 12px 30px; border-radius: 30px; margin-bottom: 20px; text-transform: uppercase;">Confirma tu cuenta aquí</a></p>
+           <p style="font-size: 16px; margin-bottom: 20px;"><a href="${process.env.FRONTEND_URL}/ConfirmAccount/${token}" style="background-color: #16a34a; color: #ffffff; font-size: 16px; text-decoration: none; padding: 12px 30px; border-radius: 30px; margin-bottom: 20px; text-transform: uppercase;">Confirma tu cuenta aquí</a></p>
            <p style="font-size: 14px;">Si tú no creaste esta cuenta, puedes ignorar este mensaje.</p>
                   </div> 
               </section>   
