@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
 import sgMail from '@sendgrid/mail';
-sgMail.setApiKey('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')
+sgMail.setApiKey('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')
 
 
 export const emailRegistro = async (Userdata) => {
@@ -60,7 +60,26 @@ export const emailForgotPassword = async (Userdata) => {
 
   const { email, name, token } = Userdata;
 
-  const transport = nodemailer.createTransport({
+  
+  const msg = {
+    to: email, // Change to your recipient
+    from: 'contacto@cedym.com', // Change to your verified sender
+    subject: 'aSending with SendGrid is Fun',
+    text: 'anad easy to do anywhere, even with Node.js',
+    html: '<strong>and eaasy to do anywhere, even with Node.js</strong>',
+  }
+  
+  sgMail
+  .send(msg)
+  .then((response) => {
+  console.log(response[0].statusCode)
+  console.log(response[0].headers)
+  })
+  .catch((error) => {
+  console.error(error)
+  })
+
+  /* const transport = nodemailer.createTransport({
       host: process.env.EMAIL_HOST, 
       port: process.env.EMAIL_PORT,
       auth: {
@@ -84,7 +103,7 @@ export const emailForgotPassword = async (Userdata) => {
                   <p style="font-size: 14px;"> Si tu no solicitaste cambiar la contraseña, puedes ignorar el mensaje.</p>
                 </div>
               </section> `
-    })
+    }) */
 
 };
 
