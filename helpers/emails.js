@@ -19,7 +19,7 @@ export const emailRegistro = async (Userdata) => {
         from: '"Notificaciones CEDYM" <contacto@cedym.co>',
         to: email,
         subject: "Confirma tu Cuenta",
-        text: "",
+        text: "Confirma tu Cuenta",
         html: ` <section style="font-family: 'Roboto'; sans-serif; min-height: 100vh; display: flex; justify-content: center; align-items: center; flex-direction: column;">
         <div style="max-width: 600px; padding: 20px; background-color: #ffffff; border-radius: 10px; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); text-align: center; display: flex; flex-direction: column; align-items: center; border-top: 5px solid #16a34a;">
            <h2 style="font-size: 24px; font-weight: bold; margin-bottom: 20px;">¡Hola ${name}"!</h2>
@@ -52,7 +52,7 @@ export const emailForgotPassword = async (Userdata) => {
       from: '"Notificaciones CEDYM" <contacto@cedym.co>',
       to: email,
       subject: "Reestablece tu Contraseña",
-      text: "",
+      text: "Reestablece tu Contraseña",
       html: ` <section style="font-family: 'Roboto'; min-height: 100vh; display: flex; justify-content: center; align-items: center; flex-direction: column;">
                 <div style="max-width: 600px; padding: 20px; background-color: #ffffff; border-radius: 10px; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); text-align: center; display: flex; flex-direction: column; align-items: center; border-top: 5px solid #16a34a;">
                   <h2 style="font-size: 24px; font-weight: bold; margin-bottom: 20px;">Hola ${name} has solicitado reestablecer tu contraseña</h2>
@@ -84,7 +84,7 @@ export const emailCreatePassword = async (Userdata) => {
       from: '"Notificaciones CEDYM" <contacto@cedym.co>',
       to: email,
       subject: "Crea tu Contraseña",
-      text: "",
+      text: "Crea tu Contraseña",
       html: ` <section style="font-family: 'Roboto'; min-height: 100vh; display: flex; justify-content: center; align-items: center; flex-direction: column;">
                   <div style="max-width: 600px; padding: 20px; background-color: #ffffff; border-radius: 10px; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); text-align: center; display: flex; flex-direction: column; align-items: center; border-top: 5px solid #16a34a;">
                     <h2 style="font-size: 24px; font-weight: bold; margin-bottom: 20px;"> Hola ${name} se ha hecho un registro a su nombre</h2>
