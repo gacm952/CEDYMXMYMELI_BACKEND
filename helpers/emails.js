@@ -35,7 +35,7 @@ export const emailRegistro = async (Userdata) => {
     } catch (error) {
       console.error(error);
     }
-  })();
+  })()};
 
  export const emailForgotPassword = async (Userdata) => {
 
