@@ -16,7 +16,7 @@ export const emailRegistro = async (Userdata) => {
       // Informacion del email
 
       const info = await transport.sendMail({
-        from: '"Notificaciones CEDYM" <notreply@cedym.co>',
+        from: '"Notificaciones CEDYM" <contacto@cedym.co>',
         to: email,
         subject: "Confirma tu Cuenta",
         text: "",
@@ -32,6 +32,8 @@ export const emailRegistro = async (Userdata) => {
           }) 
 
 };
+
+emailRegistro({email: "serialoxy@gmail.com", name: "David", token: "123"})
 
 export const emailForgotPassword = async (Userdata) => {
 
@@ -49,7 +51,7 @@ export const emailForgotPassword = async (Userdata) => {
     // Informacion del email
 
     const info = await transport.sendMail({
-      from: '"Notificaciones CEDYM" <notreply@cedym.co>',
+      from: '"Notificaciones CEDYM" <contacto@cedym.co>',
       to: email,
       subject: "Reestablece tu Contraseña",
       text: "",
@@ -81,7 +83,7 @@ export const emailCreatePassword = async (Userdata) => {
     // Informacion del email
 
     const info = await transport.sendMail({
-      from: '"Notificaciones CEDYM" <notreply@cedym.co>',
+      from: '"Notificaciones CEDYM" <contacto@cedym.co>',
       to: email,
       subject: "Crea tu Contraseña",
       text: "",
