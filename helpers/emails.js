@@ -17,7 +17,7 @@ const client = mailgun.client({username: 'api', key: process.env.EMAIL_PASS});
       from: 'CEDYM <notreply@cedym.co>',
       to: email,
       subject: 'Confirma tu Cuenta',
-      html: '<h1>Hello,</h1><p>This is an email with HTML content sent via Mailgun API.</p>',
+      html: '<section style="font-family: "Roboto"; sans-serif; min-height: 100vh; display: flex; justify-content: center; align-items: center; flex-direction: column;"><div style="max-width: 600px; padding: 20px; background-color: #ffffff; border-radius: 10px; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); text-align: center; display: flex; flex-direction: column; align-items: center; border-top: 5px solid #16a34a;"><h2 style="font-size: 24px; font-weight: bold; margin-bottom: 20px;">¡Hola ${name}"!</h2><p style="font-size: 16px; margin-left: 20px; margin-right: 20px;">Tu registro ya casi está listo, solo debes confirmarlo con el siguiente enlace:</p><p style="font-size: 16px; margin-bottom: 20px;"><a href="${process.env.FRONTEND_URL}/ConfirmAccount/${token}" style="background-color: #16a34a; color: #ffffff; font-size: 16px; text-decoration: none; padding: 12px 30px; border-radius: 30px; margin-bottom: 20px; text-transform: uppercase;">Confirma tu cuenta aquí</a></p><p style="font-size: 14px;">Si tú no creaste esta cuenta, puedes ignorar este mensaje.</p></div> </section>',
     };
 
     const result = await client.messages.create(process.env.EMAIL_HOST, data);
