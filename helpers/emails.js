@@ -11,7 +11,7 @@ const data = {
 	from: 'CEDYM<notreply@cedym.co>',
 	to: email,
 	subject: "Confirma tu Cuenta",
-	template: "Confirm Account",
+	template: "confirm account",
 	'h:X-Mailgun-Variables': {name: name, token: token}
 };
 mg.messages().send(data, function (error, body) {
