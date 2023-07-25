@@ -1,5 +1,5 @@
 import formData from 'form-data';
-import Mailgun from 'mailgun.js';
+import mailgun from 'mailgun.js';
 
 
 export const emailRegistro = async (Userdata) => {
