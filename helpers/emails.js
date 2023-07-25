@@ -1,22 +1,31 @@
+import path from 'node:path';
+import fs from 'node:fs/promises';
 import formData from 'form-data';
 import Mailgun from 'mailgun.js';
 
 
 export const emailRegistro = async (Userdata) => {
 
-  const{ email, name, token } = Userdata
+const{ email, name, token } = Userdata
 
-const mg = Mailgun({apiKey: process.env.EMAIL_PASS, domain: process.env.EMAIL_HOST});
-const data = {
-	from: 'CEDYM<notreply@cedym.co>',
-	to: email,
-	subject: "Confirma tu Cuenta",
-	template: "confirm account",
-	'h:X-Mailgun-Variables': {name: name, token: token}
-};
-mg.messages().send(data, function (error, body) {
-	console.log(body);
-})};
+const mailgun = new Mailgun(formData);
+const client = mailgun.client({username: 'api', key: process.env.EMAIL_PASS});
+
+(async () => {
+  try {
+    const data = {
+      from: 'CEDYM <notreply@cedym.co>',
+      to: email,
+      subject: 'Confirma tu Cuenta',
+      html: '<h1>Hello,</h1><p>This is an email with HTML content sent via Mailgun API.</p>',
+    };
+
+    const result = await client.messages.create(process.env.EMAIL_HOST, data);
+    console.log(result);
+  } catch (error) {
+    console.error(error);
+  }
+})()};
 
  export const emailForgotPassword = async (Userdata) => {
 
