@@ -12,7 +12,7 @@ const mailgun = new Mailgun(formData);
 const client = mailgun.client({username: 'api', key: process.env.EMAIL_PASS});
 
 const messageData = {
-  from: 'Notificaciones CEDYM <notreply@cedym.co>',
+  from: 'CEDYM<notreply@cedym.co>',
   to: email,
   subject: 'Confirma tu Cuenta',
   text: '¡Hola, ' + name + '! ingresa en este enlace para confirmar tu cuenta ' + process.env.FRONTEND_URL + '/ConfirmAccount/' + token + '',
