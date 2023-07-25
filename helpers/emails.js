@@ -1,5 +1,3 @@
-import path from 'node:path';
-import fs from 'node:fs/promises';
 import formData from 'form-data';
 import Mailgun from 'mailgun.js';
 
