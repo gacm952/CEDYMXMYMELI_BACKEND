@@ -1,12 +1,12 @@
 import formData from 'form-data';
-import mailgun from 'mailgun.js';
+import Mailgun from 'mailgun.js';
 
 
 export const emailRegistro = async (Userdata) => {
 
   const{ email, name, token } = Userdata
 
-const mg = mailgun({apiKey: process.env.EMAIL_PASS, domain: process.env.EMAIL_HOST});
+const mg = Mailgun({apiKey: process.env.EMAIL_PASS, domain: process.env.EMAIL_HOST});
 const data = {
 	from: 'CEDYM<notreply@cedym.co>',
 	to: email,
