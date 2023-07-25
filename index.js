@@ -14,11 +14,8 @@ conectarDB();
 
 // Configurar CORS de manera más simple
 
-const corsOptions = {
-    origin: "https://app.cedym.co",
-  };
-  
-app.use(cors(corsOptions));
+app.use(cors());
+
 
 // Routing
 
