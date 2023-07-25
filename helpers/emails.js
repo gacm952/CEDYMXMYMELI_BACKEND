@@ -17,8 +17,10 @@ const client = mailgun.client({username: 'api', key: process.env.EMAIL_PASS});
       from: 'CEDYM <notreply@cedym.co>',
       to: email,
       subject: 'Confirma tu Cuenta',
-      html: '<section style="font-family: "Roboto"; sans-serif; min-height: 100vh; display: flex; justify-content: center; align-items: center; flex-direction: column;"><div style="max-width: 600px; padding: 20px; background-color: #ffffff; border-radius: 10px; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); text-align: center; display: flex; flex-direction: column; align-items: center; border-top: 5px solid #16a34a;"><h2 style="font-size: 24px; font-weight: bold; margin-bottom: 20px;">¡Hola ' + name + '"!</h2><p style="font-size: 16px; margin-left: 20px; margin-right: 20px;">Tu registro ya casi está listo, solo debes confirmarlo con el siguiente enlace:</p><p style="font-size: 16px; margin-bottom: 20px;"><a href="' + process.env.FRONTEND_URL + '/ForgotPassword/' + token + '" style="background-color: #16a34a; color: #ffffff; font-size: 16px; text-decoration: none; padding: 12px 30px; border-radius: 30px; margin-bottom: 20px; text-transform: uppercase;">Confirma tu cuenta aquí</a></p><p style="font-size: 14px;">Si tú no creaste esta cuenta, puedes ignorar este mensaje.</p></div> </section>',
+      html: '<table style="width: 100%; max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 10px; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);"><tr><td style="text-align: center; padding: 20px 0; border-top: 5px solid #16a34a;"><h2 style="font-size: 24px; font-weight: bold; margin-bottom: 20px;">¡Hola ' + name + '!</h2><p style="font-size: 16px; margin: 0 20px;">Tu registro ya casi está listo, solo debes confirmarlo con el siguiente enlace:</p><p style="margin-bottom: 20px;"><a href="' + process.env.FRONTEND_URL + '/CreatePassword/' + token + '" style="display: inline-block; background-color: #16a34a; color: #ffffff; font-size: 16px; text-decoration: none; padding: 12px 30px; border-radius: 30px; margin: 20px 0; text-transform: uppercase;">Confirma tu cuenta aquí</a></p><p style="font-size: 14px; margin: 0;">Si tú no creaste esta cuenta, puedes ignorar este mensaje.</p></td></tr></table>',
     };
+    
+
 
     const result = await client.messages.create(process.env.EMAIL_HOST, data);
     console.log(result);
