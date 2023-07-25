@@ -9,6 +9,7 @@ import {register,
          newPassword,
          profile,
          allProfiles,
+         createPassword
          // updateUserResponsable
         } from '../controllers/userController.js';
 
@@ -24,6 +25,11 @@ router
 .route("/resetpassword/:token")
 .get(changePassword)
 .post(newPassword); 
+
+router
+.route("/createpassword/:token")
+.post(createPassword); 
+
 router.get('/profile', checkAuth, profile); // Cheacker el login del usuario
 router.get('/profiles', checkAuth, allProfiles); // Buscar todos los perfiles
 // Agregar ruta para actualizar propiedad "Responsable"

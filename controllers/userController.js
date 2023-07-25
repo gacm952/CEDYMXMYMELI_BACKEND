@@ -20,17 +20,15 @@ const register = async (req, res) => {
         user.registeredBy = req.body.registeredBy;
         await user.save();
 
-        // Enviar el email de validacion
-
-        emailRegistro({
-            email: user.email,
-            name: user.name,
-            token: user.token,
-        })
-
+        if (req.body.password !== '') {
+            emailRegistro({
+                email: user.email,
+                name: user.name,
+                token: user.token,
+            })
+        }
+        
         if (req.body.password === '') {
-            // Enviar el email de crear contraseña
-
             emailCreatePassword({
                 email: user.email,
                 name: user.name,
@@ -150,6 +148,33 @@ const newPassword = async (req, res) => {
     }
 
 };
+
+const createPassword = async (req, res) => {
+    const {token} = req.params;
+    const {password} = req.body;
+
+    const user = await User.findOne({token});
+    if (user) {
+        user.password = password;
+        try {
+            await user.save();
+            res.json({msg: 'PASSWORD MODIFICADO CORRECTAMENTE, AHORA CONFIRMA TU EMAIL.'})
+
+            emailRegistro({
+                email: user.email,
+                name: user.name,
+                token: user.token,
+            })
+
+        } catch (error) {
+            console.log(error);
+        }
+    } else {
+        const error = new Error("TOKEN NO VALIDO");
+        return res.status(404).json({msg: error.message});
+    }
+
+};
     
 const profile = async (req, res) => {
     const user = await User.findOne(req.user)
@@ -189,5 +214,6 @@ export {
     newPassword,
     profile,
     allProfiles,
+    createPassword,
     //updateUserResponsable 
 };
