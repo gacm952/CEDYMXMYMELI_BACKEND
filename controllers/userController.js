@@ -1,6 +1,7 @@
 import User from "../models/User.js"
 import idGenerator from "../helpers/idGenerator.js";
 import jwtGenerator from "../helpers/jwtGenerator.js";
+import bcrypt from 'bcrypt';
 import { emailRegistro, emailForgotPassword, emailCreatePassword } from '../helpers/emails.js';
 
 const register = async (req, res) => {
@@ -134,6 +135,14 @@ const newPassword = async (req, res) => {
 
     const user = await User.findOne({token});
     if (user) {
+
+        const isMatch = await bcrypt.compare(password, user.password);
+
+        if (isMatch) {
+        const error = new Error("La nueva contraseña debe ser diferente a la contraseña actual.");
+        return res.status(400).json({ msg: error.message });
+        }
+
         user.password = password;
         user.token = '';
         try {
