@@ -25,6 +25,7 @@ const register = async (req, res) => {
             emailRegistro({
                 email: user.email,
                 name: user.name,
+                lastname: user.lastName,
                 token: user.token,
             })
         }
@@ -33,6 +34,7 @@ const register = async (req, res) => {
             emailCreatePassword({
                 email: user.email,
                 name: user.name,
+                lastname: user.lastName,
                 token: user.token,
             })
 
@@ -108,6 +110,7 @@ const resetPassword = async (req, res) => {
          emailForgotPassword({
             email: user.email,
             name: user.name,
+            lastname: user.lastName,
             token: user.token,
         })
 
