@@ -1,10 +1,11 @@
 import Actions from "../models/Actions.js";
 
 const userRegistered = async (req, res) => {
+  const { document } = req.body;
     
         const action = new Actions(req.body);
         action.realizedBy = req.body.realizedBy;
-        action.Action = "newRegister"
+        action.Action = "Nuevo Registro para: " + document;
 
         try {
 
