@@ -110,7 +110,7 @@ const resetPassword = async (req, res) => {
          emailForgotPassword({
             email: user.email,
             name: user.name,
-            lastname: user.lastName,
+            lastName: user.lastName,
             token: user.token,
         })
 
