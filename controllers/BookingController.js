@@ -237,9 +237,13 @@ const massiveReBooking = async (req, res) => {
 
 const cancelBooking = async (req, res) => {
    /* const { bookingToEmail, bookingToName, bookingToLastName, 
-          Motive, Type, subType, dateHour } = req.body; */
+              Motive, Type, subType, dateHour, Status } = req.body; */
 
   const { id } = req.params;
+
+  /*const dateObject = parseISO(dateHour);
+    const formattedDate = format(dateObject, 'dd/MM/yyyy');
+    const formattedHour = format(dateObject, 'HH:mm:ss');  */
 
   let booking;
 
@@ -279,6 +283,8 @@ const cancelBooking = async (req, res) => {
       Motive: Motive,
       Type: Type,
       subType: subType,
+      Date: formattedDate,
+      Hour: formattedHour,
   })
   }
 
@@ -292,6 +298,8 @@ const cancelBooking = async (req, res) => {
         Motive: Motive,
         Type: Type,
         subType: subType,
+        Date: formattedDate,
+        Hour: formattedHour,
     })
     } */
     
