@@ -1,12 +1,22 @@
 import mongoose from "mongoose"; 
 import Booking from "../models/Booking.js";
+import { emailCreateBooking, emailCreateBookingAdmission, emailReBooking, 
+         emailReBookingAdmission, emailCancelBooking, emailCancelBookingAdmission } from '../helpers/emails.js';
+import idGenerator from "../helpers/idGenerator.js";
+import { format, parseISO  } from "date-fns";
 
 const createBooking = async (req, res) => {
-    const { bookingTo } = req.body;
+    const { bookingTo, bookingToEmail, bookingToName, bookingToLastName, 
+            Motive, Type, subType, dateHour } = req.body;
 
     const booking = new Booking(req.body);
+    booking.token = idGenerator();
     booking.bookingFor = req.user._id;
     booking.bookingTo = bookingTo || req.user._id;
+
+   const dateObject = parseISO(dateHour);
+   const formattedDate = format(dateObject, 'dd/MM/yyyy');
+   const formattedHour = format(dateObject, 'HH:mm:ss');
 
     try {
         booking.Status = 'Active';
@@ -15,10 +25,59 @@ const createBooking = async (req, res) => {
 
         res.json(bookingSaved);
 
+      // If user create his own booking
+
+      if(req.user.role === "User") {
+        emailCreateBooking({
+          email: req.user.email,
+          name: req.user.name,
+          lastName: req.user.lastName,
+          Motive: Motive,
+          Type: Type,
+          subType: subType,
+          Date: formattedDate,
+          Hour: formattedHour,
+          token: booking.token,
+      })
+      }
+
+      // If Admission create someone booking
+
+        if(req.user.role === "Admission") {
+          emailCreateBookingAdmission({
+            email: bookingToEmail,
+            name: bookingToName,
+            lastName: bookingToLastName,
+            Motive: Motive,
+            Type: Type,
+            subType: subType,
+            Date: formattedDate,
+            Hour: formattedHour,
+            token: booking.token,
+        })
+        }
+
     } catch (error) {
       res.status(500).json({ msg: 'Error al crear la cita' });
     }
 }
+
+const confirmBooking = async (req, res) => {
+  const { token } = req.params;
+  const bookingConfirm = await Booking.findOne({token})
+  if (!bookingConfirm){
+      const error = new Error("TOKEN NO VALIDO");
+      return res.status(403).json({msg: error.message});
+  } 
+  try {
+      bookingConfirm.confirmado = true;
+      bookingConfirm.token = '';
+      await bookingConfirm.save();
+      res.json({msg: 'CITA CONFIRMADA CORRECTAMENTE'})
+  } catch(error){
+      console.log(error);
+  }
+};
 
 const getBookings = async (req, res) => {
 
@@ -64,7 +123,14 @@ const getBooking = async (req, res) => {
 }
 
 const reBooking = async (req, res) => {
+  const { bookingToEmail, bookingToName, bookingToLastName, 
+          Motive, Type, subType, dateHour } = req.body;
+
   const { id } = req.params;
+
+  const dateObject = parseISO(dateHour);
+  const formattedDate = format(dateObject, 'dd/MM/yyyy');
+  const formattedHour = format(dateObject, 'HH:mm:ss');
   
   let booking;
 
@@ -93,7 +159,37 @@ const reBooking = async (req, res) => {
     booking.dateHour = req.body.dateHour || booking.dateHour; 
     booking.editedBy = req.user._id;
 
-        const newReBooking = await booking.save();
+    const newReBooking = await booking.save();
+
+    // If user create his own booking
+
+    if(req.user.role === "User") {
+      emailReBooking({
+        email: req.user.email,
+        name: req.user.name,
+        lastName: req.user.lastName,
+        Motive: Motive,
+        Type: Type,
+        subType: subType,
+        Date: formattedDate,
+        Hour: formattedHour,
+    })
+    }
+
+    // If Admission create someone booking
+
+      if(req.user.role === "Admission") {
+        emailReBookingAdmission({
+          email: bookingToEmail,
+          name: bookingToName,
+          lastName: bookingToLastName,
+          Motive: Motive,
+          Type: Type,
+          subType: subType,
+          Date: formattedDate,
+          Hour: formattedHour,
+      })
+      }
 
         res.json(newReBooking);
     } catch (error) {
@@ -140,41 +236,71 @@ const massiveReBooking = async (req, res) => {
 };
 
 const cancelBooking = async (req, res) => {
-    const { id } = req.params;
-  
-    let booking;
-  
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      const error = new Error('El ID de la cita no es válido');
-      return res.status(400).json({ msg: error.message });
+  const { bookingToEmail, bookingToName, bookingToLastName, 
+          Motive, Type, subType, dateHour } = req.body;
+
+  const { id } = req.params;
+
+  let booking;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    const error = new Error('El ID de la cita no es válido');
+    return res.status(400).json({ msg: error.message });
+  }
+
+  try {
+    booking = await Booking.findById(id.trim());
+
+    if (!booking) {
+      const error = new Error('LA CITA NO EXISTE');
+      return res.status(404).json({ msg: error.message });
     }
-  
-    try {
-      booking = await Booking.findById(id.trim());
-  
-      if (!booking) {
-        const error = new Error('LA CITA NO EXISTE');
-        return res.status(404).json({ msg: error.message });
-      }
 
-      if (booking.bookingFor.toString() !== req.user._id.toString() && req.user.role !== "Admission") {
-        const error = new Error("ACCIÓN NO VALIDA");
-        return res.status(403).json({msg: error.message});
-      }
-
-      booking.Status = req.body.Status || booking.Status;
-
-      booking.cancelledBy = req.user._id;
-
-      const cancelBookingStatus = await booking.save();
-
-      res.json(cancelBookingStatus);
-      
-    } catch (error) {
-      console.log(error);
-      res.status(500).json({ msg: 'Error al eliminar la cita' });
+    if (booking.bookingFor.toString() !== req.user._id.toString() && req.user.role !== "Admission") {
+      const error = new Error("ACCIÓN NO VALIDA");
+      return res.status(403).json({msg: error.message});
     }
-  };
+
+    booking.Status = req.body.Status || booking.Status;
+
+    booking.cancelledBy = req.user._id;
+
+    const cancelBookingStatus = await booking.save();
+
+    res.json(cancelBookingStatus);
+
+    // If user create his own booking
+
+  if(req.user.role === "User") {
+    emailCancelBooking({
+      email: req.user.email,
+      name: req.user.name,
+      lastName: req.user.lastName,
+      Motive: Motive,
+      Type: Type,
+      subType: subType,
+  })
+  }
+
+  // If Admission create someone booking
+
+    if(req.user.role === "Admission") {
+      emailCancelBookingAdmission({
+        email: bookingToEmail,
+        name: bookingToName,
+        lastName: bookingToLastName,
+        Motive: Motive,
+        Type: Type,
+        subType: subType,
+    })
+    }
+    
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: 'Error al eliminar la cita' });
+  }
+};
+
 
 const updateStatusUser = async (req, res) => {
     const { id } = req.params;
@@ -232,5 +358,6 @@ export {
     reBooking,
     getAllBookings,
     updateStatusUser,
-    massiveReBooking
+    massiveReBooking,
+    confirmBooking
 }

@@ -8,7 +8,8 @@ import {
         getAllBookings,
         reBooking,
         updateStatusUser,
-        massiveReBooking
+        massiveReBooking,
+        confirmBooking
 } from "../controllers/BookingController.js";
 import checkAuth from "../middleware/checkAuth.js";
 
@@ -24,7 +25,9 @@ router
 router
 .get('/allbookings', checkAuth, getDateBookings, getAllBookings)
 
-// Obtener cita creada, re agendar cita 
+router
+.get('/confirmBooking/:token', confirmBooking); 
+
 router
 .route('/:id')
 .get(checkAuth, getBooking)

@@ -2,7 +2,7 @@ import User from "../models/User.js"
 import idGenerator from "../helpers/idGenerator.js";
 import jwtGenerator from "../helpers/jwtGenerator.js";
 import bcrypt from 'bcrypt';
-import { emailRegistro, emailForgotPassword, emailCreatePassword } from '../helpers/emails.js';
+import { emailRegistro, emailForgotPassword, emailCreatePassword, emailCreatePasswordAdmission } from '../helpers/emails.js';
 
 const register = async (req, res) => {
     
@@ -172,7 +172,7 @@ const createPassword = async (req, res) => {
             await user.save();
             res.json({msg: 'PASSWORD MODIFICADO CORRECTAMENTE, AHORA CONFIRMA TU EMAIL.'})
 
-            emailRegistro({
+            emailCreatePasswordAdmission({
                 email: user.email,
                 name: user.name,
                 token: user.token,

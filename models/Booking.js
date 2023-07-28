@@ -41,6 +41,22 @@ const bookingSchema = mongoose.Schema({
         trim: true,
         default: "",
     },
+    token: {
+        type: String,
+    },
+    confirmado: {
+        type: Boolean,
+        default: false,
+    },
+    bookingToName: {
+        type: String,
+            },
+    bookingToLastName: {
+        type: String,
+        },
+    bookingToEmail: {
+        type: String,
+        },
 },
     {
         timestamps: true,
