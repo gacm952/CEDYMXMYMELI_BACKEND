@@ -1,7 +1,7 @@
 import mongoose from "mongoose"; 
 import Booking from "../models/Booking.js";
-import { emailCreateBooking, emailCreateBookingAdmission, emailReBooking, 
-         emailReBookingAdmission, emailCancelBooking, emailCancelBookingAdmission } from '../helpers/emails.js';
+// import { emailCreateBooking, emailCreateBookingAdmission, emailReBooking, 
+//         emailReBookingAdmission, emailCancelBooking, emailCancelBookingAdmission } from '../helpers/emails.js';
 import idGenerator from "../helpers/idGenerator.js";
 import { format, parseISO  } from "date-fns";
 
@@ -14,9 +14,9 @@ const createBooking = async (req, res) => {
     booking.bookingFor = req.user._id;
     booking.bookingTo = bookingTo || req.user._id;
 
-   const dateObject = parseISO(dateHour);
-   const formattedDate = format(dateObject, 'dd/MM/yyyy');
-   const formattedHour = format(dateObject, 'HH:mm:ss');
+   // const dateObject = parseISO(dateHour);
+   // const formattedDate = format(dateObject, 'dd/MM/yyyy');
+   // const formattedHour = format(dateObject, 'HH:mm:ss');
 
     try {
         booking.Status = 'Active';
@@ -25,7 +25,7 @@ const createBooking = async (req, res) => {
 
         res.json(bookingSaved);
 
-      // If user create his own booking
+      /* // If user create his own booking
 
       if(req.user.role === "User") {
         emailCreateBooking({
@@ -55,7 +55,7 @@ const createBooking = async (req, res) => {
             Hour: formattedHour,
             token: booking.token,
         })
-        }
+        } */
 
     } catch (error) {
       res.status(500).json({ msg: 'Error al crear la cita' });
@@ -123,14 +123,14 @@ const getBooking = async (req, res) => {
 }
 
 const reBooking = async (req, res) => {
-  const { bookingToEmail, bookingToName, bookingToLastName, 
-          Motive, Type, subType, dateHour } = req.body;
+  // const { bookingToEmail, bookingToName, bookingToLastName, 
+  //        Motive, Type, subType, dateHour } = req.body;
 
   const { id } = req.params;
 
-  const dateObject = parseISO(dateHour);
-  const formattedDate = format(dateObject, 'dd/MM/yyyy');
-  const formattedHour = format(dateObject, 'HH:mm:ss');
+  // const dateObject = parseISO(dateHour);
+  // const formattedDate = format(dateObject, 'dd/MM/yyyy');
+  // const formattedHour = format(dateObject, 'HH:mm:ss');
   
   let booking;
 
@@ -151,7 +151,7 @@ const reBooking = async (req, res) => {
       return res.status(403).json({msg: error.message});
     }
 
-    // Guardando los cambios realizados || Se mantienen los datos
+   // Guardando los cambios realizados || Se mantienen los datos
 
     booking.Type = req.body.Type || booking.Type;
     booking.subType = req.body.subType || booking.subType;
@@ -161,7 +161,7 @@ const reBooking = async (req, res) => {
 
     const newReBooking = await booking.save();
 
-    // If user create his own booking
+     /* // If user create his own booking
 
     if(req.user.role === "User") {
       emailReBooking({
@@ -189,7 +189,7 @@ const reBooking = async (req, res) => {
           Date: formattedDate,
           Hour: formattedHour,
       })
-      }
+      } */
 
         res.json(newReBooking);
     } catch (error) {
@@ -236,8 +236,8 @@ const massiveReBooking = async (req, res) => {
 };
 
 const cancelBooking = async (req, res) => {
-  const { bookingToEmail, bookingToName, bookingToLastName, 
-          Motive, Type, subType, dateHour } = req.body;
+   /* const { bookingToEmail, bookingToName, bookingToLastName, 
+          Motive, Type, subType, dateHour } = req.body; */
 
   const { id } = req.params;
 
@@ -270,7 +270,7 @@ const cancelBooking = async (req, res) => {
     res.json(cancelBookingStatus);
 
     // If user create his own booking
-
+/*
   if(req.user.role === "User") {
     emailCancelBooking({
       email: req.user.email,
@@ -293,7 +293,7 @@ const cancelBooking = async (req, res) => {
         Type: Type,
         subType: subType,
     })
-    }
+    } */
     
   } catch (error) {
     console.log(error);
