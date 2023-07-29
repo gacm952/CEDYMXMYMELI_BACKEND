@@ -40,8 +40,12 @@ const register = async (req, res) => {
 
         }
 
-
-        res.json({msg: "Usuario Creado Correctamente, Revisa tu Email para confirmar tu Cuenta"});
+        if (req.body.password === '') {
+            res.json({ msg: "Registro Exitoso" });
+          } else {
+            res.json({ msg: "Usuario Creado Correctamente, Revisa tu Email para confirmar tu Cuenta" });
+          }
+        
     } catch (error) {
         res.json(error);
     }

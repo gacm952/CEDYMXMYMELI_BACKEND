@@ -1,6 +1,7 @@
 import express from "express"
 import {
     userRegistered,
+    newPasswordCreated,
     bookingCreated,
     editBooking,
     cancelBookingAct,
@@ -14,6 +15,10 @@ const router = express.Router();
 router
 .route("/updateaction")
 .post(userRegistered)
+
+router
+.route("/newpasswordcreated")
+.post(newPasswordCreated)
 
 router
 .route("/bookingcreated")

@@ -1,11 +1,11 @@
 import Actions from "../models/Actions.js";
 
 const userRegistered = async (req, res) => {
-  const { document } = req.body;
+  const { document, typeDocument } = req.body;
     
         const action = new Actions(req.body);
         action.realizedBy = req.body.realizedBy;
-        action.Action = "Nuevo Registro para: " + document;
+        action.Action = "Nuevo Registro para: " + typeDocument + " " + document;
 
         try {
 
@@ -17,6 +17,23 @@ const userRegistered = async (req, res) => {
         res.json(error);
       }
 };
+
+const newPasswordCreated = async (req, res) => {
+  const { realizedBy } = req.body;
+
+  const action = new Actions(req.body);
+  action.realizedBy = realizedBy;
+  action.Action = "Nueva Contraseña Creada" ;
+
+  try {
+      const actionSaved = await action.save();
+
+      res.json(actionSaved);
+
+    } catch (error) {
+      res.status(500).json({ error: 'Error al crear la acción de crear una nueva contraseña' });
+    }
+}
 
 const bookingCreated = async (req, res) => {
     const { Target, realizedBy, Action } = req.body;
@@ -127,6 +144,7 @@ const massiveReBookingAct = async (req, res) => {
 
 export { 
     userRegistered,
+    newPasswordCreated,
     bookingCreated,
     editBooking,
     cancelBookingAct,
