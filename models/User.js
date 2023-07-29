@@ -18,7 +18,6 @@ const userSchema = mongoose.Schema({
     },
     secondLastName: {
         type: String,
-        required: true,
         trim: true,
     },
     typeDocument: {
