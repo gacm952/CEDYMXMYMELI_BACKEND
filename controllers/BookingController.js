@@ -17,6 +17,7 @@ const createBooking = async (req, res) => {
     booking.bookingTo = bookingTo || req.user._id;
 
     const dateObject = parseISO(dateHour);
+    dateObject.setHours(dateObject.getHours() - 5);
     const formattedDate = format(dateObject, 'dd/MM/yyyy');
     const formattedHour = format(dateObject, 'hh:mm a');
 
