@@ -60,12 +60,25 @@ const createBooking = async (req, res) => {
 
       // If Admission create someone booking
 
-        if(req.user.role === "Admission") {
+        if(req.user.role === "Admission" && !subType) {
           emailCreateBookingAdmission({
             email: bookingToEmail,
             name: bookingToName,
             lastName: bookingToLastName,
-            Motive: Motive,
+            Motive: Motive.replace(/Primera vez|Control/g, "").trim(),
+            Type: Type,
+            subType: subType,
+            Date: formattedDate,
+            Hour: formattedHour,
+            token: booking.token,
+        })
+
+        }if(req.user.role === "Admission" && subType) {
+          emailCreateBookingAdmissionType({
+            email: bookingToEmail,
+            name: bookingToName,
+            lastName: bookingToLastName,
+            Motive: Motive.replace(/Primera vez|Control/g, "").trim(),
             Type: Type,
             subType: subType,
             Date: formattedDate,
@@ -140,14 +153,15 @@ const getBooking = async (req, res) => {
 }
 
 const reBooking = async (req, res) => {
-  // const { bookingToEmail, bookingToName, bookingToLastName, 
-  //        Motive, Type, subType, dateHour } = req.body;
+const { bookingToEmail, bookingToName, bookingToLastName, 
+          Motive, Type, subType, dateHour } = req.body;
 
   const { id } = req.params;
 
-  // const dateObject = parseISO(dateHour);
-  // const formattedDate = format(dateObject, 'dd/MM/yyyy');
-  // const formattedHour = format(dateObject, 'HH:mm:ss');
+  const dateObject = parseISO(dateHour);
+    dateObject.setHours(dateObject.getHours() - 5);
+  const formattedDate = format(dateObject, 'dd/MM/yyyy');
+  const formattedHour = format(dateObject, 'hh:mm a');
   
   let booking;
 
