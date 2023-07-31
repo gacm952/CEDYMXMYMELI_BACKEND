@@ -29,7 +29,7 @@ const createBooking = async (req, res) => {
 
        // If user create his own booking
 
-      if(req.user.role === "User") {
+      if(req.user.role === "User" && Type.trim() === '') {
         emailCreateBooking({
           email: req.user.email,
           name: req.user.name,
