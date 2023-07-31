@@ -3,7 +3,7 @@
 
 import mongoose from "mongoose"; 
 import Booking from "../models/Booking.js";
-import { emailCreateBooking, emailCreateBookingType, emailCreateBookingAdmission } from '../helpers/emails.js';
+import { emailCreateBooking, emailCreateBookingType, emailCreateBookingAdmission, emailCreateBookingAdmissionType, emailReBooking, emailReBookingType } from '../helpers/emails.js';
 import idGenerator from "../helpers/idGenerator.js";
 import { format, parseISO } from "date-fns";
 
