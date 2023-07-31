@@ -32,7 +32,7 @@ const createBooking = async (req, res) => {
 
        // If user create his own booking
 
-      if(req.user.role === "User" && Type.trim() === '') {
+      if(req.user.role === "User" && !subType) {
         emailCreateBooking({
           email: req.user.email,
           name: req.user.name,
@@ -46,7 +46,7 @@ const createBooking = async (req, res) => {
       })
       }
 
-      if(req.user.role === "User" && Type.trim() !== '') {
+      if(req.user.role === "User" && subType) {
         emailCreateBookingType({
           email: req.user.email,
           name: req.user.name,
