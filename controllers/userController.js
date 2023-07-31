@@ -9,11 +9,15 @@ const register = async (req, res) => {
     //Evitar Registros Duplicados
 
     const {email} = req.body;
-    const duplicateUser = await User.findOne({email});
-    if (duplicateUser){
-        const error = new Error('Correo Duplicado');
-        return res.status(400).json({msg: error.message})
-    }
+
+    if(req.body.password !== '') {
+        const duplicateUser = await User.findOne({email});
+        if (duplicateUser){
+            const error = new Error('Correo Duplicado');
+            return res.status(400).json({msg: error.message})
+        }
+     }
+     
     try {
 
         const user = new User(req.body);
