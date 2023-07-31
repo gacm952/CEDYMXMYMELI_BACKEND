@@ -1,9 +1,7 @@
-/* , emailReBooking, 
-         emailReBookingAdmission, emailCancelBooking, emailCancelBookingAdmission */
-
 import mongoose from "mongoose"; 
 import Booking from "../models/Booking.js";
-import { emailCreateBooking, emailCreateBookingType, emailCreateBookingAdmission, emailCreateBookingAdmissionType, emailReBooking, emailReBookingType } from '../helpers/emails.js';
+import { emailCreateBooking, emailCreateBookingType, emailCreateBookingAdmission, emailCreateBookingAdmissionType, emailReBooking, emailReBookingType,
+          emailReBookingAdmission, emailReBookingAdmissionType } from '../helpers/emails.js';
 import idGenerator from "../helpers/idGenerator.js";
 import { format, parseISO } from "date-fns";
 
@@ -222,8 +220,21 @@ const { bookingToEmail, bookingToName, bookingToLastName,
 
     // If Admission create someone booking
 
-      if(req.user.role === "Admission") {
+      if(req.user.role === "Admission" && !subType) {
         emailReBookingAdmission({
+          email: bookingToEmail,
+          name: bookingToName,
+          lastName: bookingToLastName,
+          Motive: Motive.replace(/Primera vez|Control/g, "").trim(),
+          Type: Type,
+          subType: subType,
+          Date: formattedDate,
+          Hour: formattedHour,
+      })
+      } 
+
+      if(req.user.role === "Admission" && subType) {
+        emailReBookingAdmissionType({
           email: bookingToEmail,
           name: bookingToName,
           lastName: bookingToLastName,
@@ -280,14 +291,15 @@ const massiveReBooking = async (req, res) => {
 };
 
 const cancelBooking = async (req, res) => {
-   /* const { bookingToEmail, bookingToName, bookingToLastName, 
-              Motive, Type, subType, dateHour, Status } = req.body; */
+const { bookingToEmail, bookingToName, bookingToLastName, 
+              Motive, Type, subType, dateHour, Status } = req.body;
 
   const { id } = req.params;
 
-  /*const dateObject = parseISO(dateHour);
-    const formattedDate = format(dateObject, 'dd/MM/yyyy');
-    const formattedHour = format(dateObject, 'HH:mm:ss');  */
+  const dateObject = parseISO(dateHour);
+    dateObject.setHours(dateObject.getHours() - 5);
+  const formattedDate = format(dateObject, 'dd/MM/yyyy');
+  const formattedHour = format(dateObject, 'hh:mm a');
 
   let booking;
 
@@ -318,13 +330,26 @@ const cancelBooking = async (req, res) => {
     res.json(cancelBookingStatus);
 
     // If user create his own booking
-/*
-  if(req.user.role === "User") {
+
+  if(req.user.role === "User" && !subType) {
     emailCancelBooking({
       email: req.user.email,
       name: req.user.name,
       lastName: req.user.lastName,
-      Motive: Motive,
+      Motive: Motive.replace(/Primera vez|Control/g, "").trim(),
+      Type: Type,
+      subType: subType,
+      Date: formattedDate,
+      Hour: formattedHour,
+  })
+  }
+
+  if(req.user.role === "User" && subType) {
+    emailCancelBookingType({
+      email: req.user.email,
+      name: req.user.name,
+      lastName: req.user.lastName,
+      Motive: Motive.replace(/Primera vez|Control/g, "").trim(),
       Type: Type,
       subType: subType,
       Date: formattedDate,
@@ -334,18 +359,31 @@ const cancelBooking = async (req, res) => {
 
   // If Admission create someone booking
 
-    if(req.user.role === "Admission") {
+    if(req.user.role === "Admission" && !subType) {
       emailCancelBookingAdmission({
         email: bookingToEmail,
         name: bookingToName,
         lastName: bookingToLastName,
-        Motive: Motive,
+        Motive: Motive.replace(/Primera vez|Control/g, "").trim(),
         Type: Type,
         subType: subType,
         Date: formattedDate,
         Hour: formattedHour,
     })
-    } */
+    } 
+
+    if(req.user.role === "Admission" && subType) {
+      emailCancelBookingAdmissionType({
+        email: bookingToEmail,
+        name: bookingToName,
+        lastName: bookingToLastName,
+        Motive: Motive.replace(/Primera vez|Control/g, "").trim(),
+        Type: Type,
+        subType: subType,
+        Date: formattedDate,
+        Hour: formattedHour,
+    })
+    } 
     
   } catch (error) {
     console.log(error);
