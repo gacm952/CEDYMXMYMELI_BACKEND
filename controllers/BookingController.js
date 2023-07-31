@@ -192,14 +192,27 @@ const { bookingToEmail, bookingToName, bookingToLastName,
 
     const newReBooking = await booking.save();
 
-     /* // If user create his own booking
+     // If user create his own booking
 
-    if(req.user.role === "User") {
+    if(req.user.role === "User" && !subType) {
       emailReBooking({
         email: req.user.email,
         name: req.user.name,
         lastName: req.user.lastName,
-        Motive: Motive,
+        Motive: Motive.replace(/Primera vez|Control/g, "").trim(),
+        Type: Type,
+        subType: subType,
+        Date: formattedDate,
+        Hour: formattedHour,
+    })
+    }
+
+    if(req.user.role === "User" && subType) {
+      emailReBookingType({
+        email: req.user.email,
+        name: req.user.name,
+        lastName: req.user.lastName,
+        Motive: Motive.replace(/Primera vez|Control/g, "").trim(),
         Type: Type,
         subType: subType,
         Date: formattedDate,
@@ -214,13 +227,13 @@ const { bookingToEmail, bookingToName, bookingToLastName,
           email: bookingToEmail,
           name: bookingToName,
           lastName: bookingToLastName,
-          Motive: Motive,
+          Motive: Motive.replace(/Primera vez|Control/g, "").trim(),
           Type: Type,
           subType: subType,
           Date: formattedDate,
           Hour: formattedHour,
       })
-      } */
+      } 
 
         res.json(newReBooking);
     } catch (error) {
