@@ -1,7 +1,7 @@
 import mongoose from "mongoose"; 
 import Booking from "../models/Booking.js";
-// import { emailCreateBooking, emailCreateBookingAdmission, emailReBooking, 
-//         emailReBookingAdmission, emailCancelBooking, emailCancelBookingAdmission } from '../helpers/emails.js';
+import { emailCreateBooking, emailCreateBookingAdmission, emailReBooking, 
+         emailReBookingAdmission, emailCancelBooking, emailCancelBookingAdmission } from '../helpers/emails.js';
 import idGenerator from "../helpers/idGenerator.js";
 import { format, parseISO  } from "date-fns";
 
@@ -14,9 +14,9 @@ const createBooking = async (req, res) => {
     booking.bookingFor = req.user._id;
     booking.bookingTo = bookingTo || req.user._id;
 
-   // const dateObject = parseISO(dateHour);
-   // const formattedDate = format(dateObject, 'dd/MM/yyyy');
-   // const formattedHour = format(dateObject, 'HH:mm:ss');
+    const dateObject = parseISO(dateHour);
+    const formattedDate = format(dateObject, 'dd/MM/yyyy');
+    const formattedHour = format(dateObject, 'HH:mm:ss');
 
     try {
         booking.Status = 'Active';
@@ -25,7 +25,7 @@ const createBooking = async (req, res) => {
 
         res.json(bookingSaved);
 
-      /* // If user create his own booking
+       // If user create his own booking
 
       if(req.user.role === "User") {
         emailCreateBooking({
@@ -42,7 +42,7 @@ const createBooking = async (req, res) => {
       }
 
       // If Admission create someone booking
-
+/*
         if(req.user.role === "Admission") {
           emailCreateBookingAdmission({
             email: bookingToEmail,
