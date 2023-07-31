@@ -1,12 +1,11 @@
 /* , emailCreateBookingAdmission, emailReBooking, 
          emailReBookingAdmission, emailCancelBooking, emailCancelBookingAdmission */
 
-
 import mongoose from "mongoose"; 
 import Booking from "../models/Booking.js";
-import { emailCreateBooking} from '../helpers/emails.js';
+import { emailCreateBooking, emailCreateBookingType } from '../helpers/emails.js';
 import idGenerator from "../helpers/idGenerator.js";
-import { format, parseISO  } from "date-fns";
+import { format, parseISO } from "date-fns";
 
 const createBooking = async (req, res) => {
     const { bookingTo, bookingToEmail, bookingToName, bookingToLastName, 
@@ -19,7 +18,7 @@ const createBooking = async (req, res) => {
 
     const dateObject = parseISO(dateHour);
     const formattedDate = format(dateObject, 'dd/MM/yyyy');
-    const formattedHour = format(dateObject, 'HH:mm');
+    const formattedHour = format(dateObject, 'HH:mm a');
 
     try {
         booking.Status = 'Active';
@@ -35,7 +34,21 @@ const createBooking = async (req, res) => {
           email: req.user.email,
           name: req.user.name,
           lastName: req.user.lastName,
-          Motive: Motive,
+          Motive: Motive.replace(/Primera vez/g, "").trim(),
+          Type: Type,
+          subType: subType,
+          Date: formattedDate,
+          Hour: formattedHour,
+          token: booking.token,
+      })
+      }
+
+      if(req.user.role === "User" && Type.trim() !== '') {
+        emailCreateBookingType({
+          email: req.user.email,
+          name: req.user.name,
+          lastName: req.user.lastName,
+          Motive: Motive.replace(/Primera vez/g, "").trim(),
           Type: Type,
           subType: subType,
           Date: formattedDate,
