@@ -1,9 +1,9 @@
-/* , emailCreateBookingAdmission, emailReBooking, 
+/* , emailReBooking, 
          emailReBookingAdmission, emailCancelBooking, emailCancelBookingAdmission */
 
 import mongoose from "mongoose"; 
 import Booking from "../models/Booking.js";
-import { emailCreateBooking, emailCreateBookingType } from '../helpers/emails.js';
+import { emailCreateBooking, emailCreateBookingType, emailCreateBookingAdmission } from '../helpers/emails.js';
 import idGenerator from "../helpers/idGenerator.js";
 import { format, parseISO } from "date-fns";
 
@@ -20,8 +20,6 @@ const createBooking = async (req, res) => {
     dateObject.setHours(dateObject.getHours() - 5);
     const formattedDate = format(dateObject, 'dd/MM/yyyy');
     const formattedHour = format(dateObject, 'hh:mm a');
-
-    console.log(dateHour, dateObject, formattedHour);
 
     try {
         booking.Status = 'Active';
@@ -61,7 +59,7 @@ const createBooking = async (req, res) => {
       }
 
       // If Admission create someone booking
-/*
+
         if(req.user.role === "Admission") {
           emailCreateBookingAdmission({
             email: bookingToEmail,
@@ -74,7 +72,7 @@ const createBooking = async (req, res) => {
             Hour: formattedHour,
             token: booking.token,
         })
-        } */
+        } 
 
     } catch (error) {
       res.status(500).json({ msg: 'Error al crear la cita' });
