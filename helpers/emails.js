@@ -101,7 +101,7 @@ const client = mailgun.client({username: 'api', key: process.env.EMAIL_PASS});
 
 export const emailCreateBooking = async (Userdata) => {
 
-  const{ email, name, lastName, token, Motive } = Userdata;
+  const{ email, name, lastName, token, Motive, Date, Hour } = Userdata;
 
 const mailgun = new Mailgun(formData);
 const client = mailgun.client({username: 'api', key: process.env.EMAIL_PASS});
