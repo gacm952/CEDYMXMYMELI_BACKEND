@@ -19,7 +19,7 @@ const createBooking = async (req, res) => {
 
     const dateObject = parseISO(dateHour);
     const formattedDate = format(dateObject, 'dd/MM/yyyy');
-    const formattedHour = format(dateObject, 'HH:mm:ss');
+    const formattedHour = format(dateObject, 'HH:mm');
 
     try {
         booking.Status = 'Active';
