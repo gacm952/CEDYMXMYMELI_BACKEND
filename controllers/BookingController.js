@@ -1,7 +1,10 @@
+/* , emailCreateBookingAdmission, emailReBooking, 
+         emailReBookingAdmission, emailCancelBooking, emailCancelBookingAdmission */
+
+
 import mongoose from "mongoose"; 
 import Booking from "../models/Booking.js";
-import { emailCreateBooking, emailCreateBookingAdmission, emailReBooking, 
-         emailReBookingAdmission, emailCancelBooking, emailCancelBookingAdmission } from '../helpers/emails.js';
+import { emailCreateBooking} from '../helpers/emails.js';
 import idGenerator from "../helpers/idGenerator.js";
 import { format, parseISO  } from "date-fns";
 
