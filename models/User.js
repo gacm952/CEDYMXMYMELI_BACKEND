@@ -83,6 +83,24 @@ const userSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
     },
+    parentName: {
+        type: String,
+        },
+    parentSecondName: {
+        type: String,
+        },
+    parentLastName: {
+        type: String,
+        },
+    parentLastSecondName: {
+        type: String,
+        },    
+    parentTypeOfDocument: {
+        type: String,
+        },
+    parentDocument: {
+        type: Number,
+        },   
 },
     {
         timestamps: true,

@@ -293,7 +293,7 @@ const massiveReBooking = async (req, res) => {
 
 const cancelBooking = async (req, res) => {
 const { bookingToEmail, bookingToName, bookingToLastName, 
-              Motive, Type, subType, dateHour, Status } = req.body;
+              Motive, Type, subType, dateHour } = req.body;
 
   const { id } = req.params;
 
