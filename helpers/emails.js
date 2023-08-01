@@ -7,8 +7,7 @@ export const emailRegistro = async (Userdata) => {
 
 const{ email, name, lastName, token } = Userdata
 
-const mailgun = new Mailgun(formData);
-const client = mailgun.client({username: 'api', key: process.env.EMAIL_PASS});
+sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
 const msg = {
   to: email, // Change to your recipient
