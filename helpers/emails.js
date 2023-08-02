@@ -150,11 +150,11 @@ export const emailCreateBookingAdmission = async (Userdata) => {
 
   const{email, name, lastName, token, Motive, Date, Hour, Type} = Userdata;
 
-  sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
 const msg = {
   to: email, // Change to your recipient
-  from: 'CitasCEDYM@cedym.co', // Change to your verified sender
+  from: 'CitasCEDYM <bookings@cedym.co>', // Change to your verified sender
   subject: 'Su Cita de ' + Motive + ' Está Agendada',
   text: 'Su Cita de ' + Motive + ' Está Agendada',
   html: '<body style="margin:0;"><table style="padding:40px 0px;width:100%;max-width:600px;margin:0 auto;background-color:#F8F8F8;"><tr><td style="text-align:center;"><img src="https://res.cloudinary.com/dhqxmaqdk/image/upload/f_auto,q_auto/jmbwpbt5q3j5eomhcgh7" alt="Logo CEDYM" style="width:100px;padding:20px;"></td></tr><tr><td style="padding:20px;"><p style="text-align:left;font-size:16px;margin:0;">¡Hola, <strong>' + name + ' ' + lastName + '</strong>!</p><p style="text-align:justify;font-size:14px;margin:20px 0;">Es un placer saludarle, nos complace informarle que hemos recibido con éxito su solicitud.</p><p style="text-align:left;font-size:16px;margin:20px 0;">Informacion de la Cita:</p><p style="text-align:left;font-size:16px;margin:0;">Fecha: <strong>' + Date + '</strong></p><p style="text-align:left;font-size:16px;margin:0;">Hora: <strong>' + Hour + '</strong></p><p style="text-align:left;font-size:16px;margin:0;">Tipo: <strong>' + Type + '</strong></p><p style="text-align:left;font-size:16px;margin:0;">Motivo: <strong>' + Motive + '</strong></p><p style="text-align:center;font-size:14px;margin:50px 0px 30px 0px;">Recomendaciones:</p><ul style="list-style: none; text-align:justify;font-size:12px;margin:0px 30px;"><li style="margin:0px 0px 14px 0px;">Llegar 15 minutos antes de la cita para facilitar el proceso de registro y evitar demoras.</li><li style="margin:0px 0px 14px 0px;">Traer consigo los documentos necesarios para la cita médica, incluyendo estudios médicos previos u otra documentación relevante.</li><li style="margin:0px 0px 14px 0px;">Usar tapabocas durante toda la visita para mantener un entorno seguro tanto para el paciente como para el personal médico.</li></ul></td></tr><tr><td style="text-align:center;"><a href="' + process.env.FRONTEND_URL + '/confirmBooking/' + token + '" style="display:inline-block;background-color:#00a451;color:#ffffff;font-size:16px;font-weight:bold;text-decoration:none;padding:12px 20px;border-radius:8px;text-transform:uppercase;margin:10px 0px;">Confirmar Cita</a></td></tr></table></body>',
