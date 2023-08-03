@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import Booking from "../models/Booking.js";
 import { emailCreateBooking, emailCreateBookingType, emailCreateBookingAdmission, emailCreateBookingAdmissionType, emailReBooking, emailReBookingType,
           emailReBookingAdmission, emailReBookingAdmissionType, emailCancelBooking, emailCancelBookingType,
-          emailCancelBookingAdmission, emailCancelBookingAdmissionType } from '../helpers/emails.js';
+          emailCancelBookingAdmission, emailCancelBookingAdmissionType, scheduleReminderEmail } from '../helpers/emails.js';
 import idGenerator from "../helpers/idGenerator.js";
 import { format, parseISO } from "date-fns";
 
@@ -84,7 +84,18 @@ const createBooking = async (req, res) => {
             Hour: formattedHour,
             token: booking.token,
         })
-        } 
+        }
+        
+        scheduleReminderEmail({
+          email: bookingToEmail,
+          name: bookingToName,
+          lastName: bookingToLastName,
+          Motive: Motive.replace(/Primera vez|Control/g, "").trim(),
+          Type: Type,
+          subType: subType,
+          Date: formattedDate,
+          Hour: formattedHour,
+        })
 
     } catch (error) {
       res.status(500).json({ msg: 'Error al crear la cita' });
