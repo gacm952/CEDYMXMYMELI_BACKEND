@@ -72,7 +72,8 @@ const login = async (req, res) => {
     if(await user.passwordCheck(password)){
         res.json({
             _id: user._id,
-            primer_nombre: user.primer_nombre,
+            name: user.name,
+            lastName: user.lastName,
             email: user.email,
             token: jwtGenerator(user._id),
             role: user.role,
