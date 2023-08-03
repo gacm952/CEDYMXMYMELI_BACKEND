@@ -55,6 +55,17 @@ const createBooking = async (req, res) => {
           Hour: formattedHour,
           token: booking.token,
       })
+
+        scheduleReminderEmail({
+          email: req.user.email,
+          name: req.user.name,
+          lastName: req.user.lastName,
+          Motive: Motive.replace(/Primera vez|Control/g, "").trim(),
+          Type: Type,
+          subType: subType,
+          Date: formattedDate,
+          Hour: formattedHour,
+      })
       }
 
       // If Admission create someone booking
@@ -72,7 +83,21 @@ const createBooking = async (req, res) => {
             token: booking.token,
         })
 
-        }if(req.user.role === "Admission" && subType) {
+          scheduleReminderEmail({
+            email: bookingToEmail,
+            name: bookingToName,
+            lastName: bookingToLastName,
+            Motive: Motive.replace(/Primera vez|Control/g, "").trim(),
+            Type: Type,
+            subType: subType,
+            Date: formattedDate,
+            Hour: formattedHour,
+          })     
+      }
+        
+        
+        
+        if(req.user.role === "Admission" && subType) {
           emailCreateBookingAdmissionType({
             email: bookingToEmail,
             name: bookingToName,
@@ -85,17 +110,6 @@ const createBooking = async (req, res) => {
             token: booking.token,
         })
         }
-        
-        scheduleReminderEmail({
-          email: bookingToEmail,
-          name: bookingToName,
-          lastName: bookingToLastName,
-          Motive: Motive.replace(/Primera vez|Control/g, "").trim(),
-          Type: Type,
-          subType: subType,
-          Date: formattedDate,
-          Hour: formattedHour,
-        })
 
     } catch (error) {
       res.status(500).json({ msg: 'Error al crear la cita' });
