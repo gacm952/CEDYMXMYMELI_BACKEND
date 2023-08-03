@@ -417,7 +417,6 @@ const { bookingToEmail, bookingToName, bookingToLastName,
   }
 };
 
-
 const updateStatusUser = async (req, res) => {
     const { id } = req.params;
     const { password } = req.body;
