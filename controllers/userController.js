@@ -10,7 +10,7 @@ const register = async (req, res) => {
 
     const {email} = req.body;
 
-    if(req.body.password !== '') {
+    if (email.trim() !== '') {
         const duplicateUser = await User.findOne({email});
         if (duplicateUser){
             const error = new Error('Correo Duplicado');
@@ -25,23 +25,25 @@ const register = async (req, res) => {
         user.registeredBy = req.body.registeredBy;
         await user.save();
 
-        if (req.body.password !== '') {
-            emailRegistro({
-                email: user.email,
-                name: user.name,
-                lastName: user.lastName,
-                token: user.token,
-            })
-        }
-        
-        if (req.body.password === '') {
-            emailCreatePassword({
-                email: user.email,
-                name: user.name,
-                lastName: user.lastName,
-                token: user.token,
-            })
-
+        if (email.trim() !== '') {
+            if (req.body.password !== '') {
+                emailRegistro({
+                    email: user.email,
+                    name: user.name,
+                    lastName: user.lastName,
+                    token: user.token,
+                })
+            }
+            
+            if (req.body.password === '') {
+                emailCreatePassword({
+                    email: user.email,
+                    name: user.name,
+                    lastName: user.lastName,
+                    token: user.token,
+                })
+    
+            }
         }
 
         if (req.body.password === '') {
