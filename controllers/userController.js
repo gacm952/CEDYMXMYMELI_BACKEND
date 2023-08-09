@@ -183,12 +183,13 @@ const createPassword = async (req, res) => {
             await user.save();
             res.json({msg: 'PASSWORD MODIFICADO CORRECTAMENTE, AHORA CONFIRMA TU EMAIL.'})
 
-            /* emailRegistroAdmission */
-            emailRegistro({
-                email: user.email,
-                name: user.name,
-                token: user.token,
-            })
+            if (user.email.trim() !== '') { 
+                emailRegistro({
+                    email: user.email,
+                    name: user.name,
+                    token: user.token,
+                })
+            }
 
         } catch (error) {
             console.log(error);

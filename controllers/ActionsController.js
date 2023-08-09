@@ -142,6 +142,24 @@ const massiveReBookingAct = async (req, res) => {
       }
 }
 
+const subscriptionPlanAction = async (req, res) => {
+  const { Target, realizedBy, Action } = req.body;
+
+  const action = new Actions(req.body);
+  action.realizedBy = realizedBy;
+  action.Target = Target || realizedBy;
+  action.Action = Action
+
+  try {
+      const actionSaved = await action.save();
+
+      res.json(actionSaved);
+
+    } catch (error) {
+      res.status(500).json({ error: 'Error al crear la acción de la suscripcion al plan' });
+    }
+}
+
 export { 
     userRegistered,
     newPasswordCreated,
@@ -150,5 +168,6 @@ export {
     cancelBookingAct,
     closeOfTheDay,
     statusChanged,
-    massiveReBookingAct
+    massiveReBookingAct,
+    subscriptionPlanAction
 };

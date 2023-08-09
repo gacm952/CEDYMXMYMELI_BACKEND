@@ -29,6 +29,8 @@ const createBooking = async (req, res) => {
 
        // If user create his own booking
 
+       if (email.trim() !== '') {
+
       if(req.user.role === "User" && !subType) {
         emailCreateBooking({
           email: req.user.email,
@@ -56,7 +58,7 @@ const createBooking = async (req, res) => {
           token: booking.token,
       })
 
-        scheduleReminderEmail({
+          scheduleReminderEmail({
           email: req.user.email,
           name: req.user.name,
           lastName: req.user.lastName,
@@ -65,12 +67,12 @@ const createBooking = async (req, res) => {
           subType: subType,
           Date: formattedDate,
           Hour: formattedHour,
-      })
+      }) 
       }
 
       // If Admission create someone booking
 
-        if(req.user.role === "Admission" && !subType) {
+        if((req.user.role === "Admission" || req.user.role === "role") && !subType) {
           emailCreateBookingAdmission({
             email: bookingToEmail,
             name: bookingToName,
@@ -94,10 +96,8 @@ const createBooking = async (req, res) => {
             Hour: formattedHour,
           })     
       }
-        
-        
-        
-        if(req.user.role === "Admission" && subType) {
+              
+        if((req.user.role === "Admission" || req.user.role === "role") && subType) {
           emailCreateBookingAdmissionType({
             email: bookingToEmail,
             name: bookingToName,
@@ -110,6 +110,7 @@ const createBooking = async (req, res) => {
             token: booking.token,
         })
         }
+      }
 
     } catch (error) {
       res.status(500).json({ msg: 'Error al crear la cita' });
@@ -135,7 +136,7 @@ const confirmBooking = async (req, res) => {
 
 const getBookings = async (req, res) => {
 
-    const bookings = await Booking.find().where('bookingFor').equals(req.user);
+    const bookings = await Booking.find().where('bookingTo').equals(req.user);
 
     res.json(bookings);
 }
@@ -167,7 +168,7 @@ const getBooking = async (req, res) => {
         return res.status(404).json({ msg: error.message});
       }
 
-      if (booking.bookingFor.toString() !== req.user._id.toString() && req.user.role !== "Admission") {
+      if (booking.bookingFor.toString() !== req.user._id.toString() && (req.user.role !== "Admission" && req.user.role !== "Admin")) {
         const error = new Error("ACCIÓN NO VALIDA");
         return res.status(403).json({msg: error.message});
       }
@@ -201,7 +202,7 @@ const { bookingToEmail, bookingToName, bookingToLastName,
       return res.status(404).json({ msg: error.message });
     }
 
-    if (booking.bookingFor.toString() !== req.user._id.toString() && req.user.role !== "Admission") {
+    if (booking.bookingFor.toString() !== req.user._id.toString() && (req.user.role !== "Admission" && req.user.role !== "Admin")) {
       const error = new Error("ACCIÓN NO VALIDA");
       return res.status(403).json({msg: error.message});
     }
@@ -217,6 +218,8 @@ const { bookingToEmail, bookingToName, bookingToLastName,
     const newReBooking = await booking.save();
 
      // If user create his own booking
+     if (email.trim() !== '') { 
+
 
     if(req.user.role === "User" && !subType) {
       emailReBooking({
@@ -246,7 +249,7 @@ const { bookingToEmail, bookingToName, bookingToLastName,
 
     // If Admission create someone booking
 
-      if(req.user.role === "Admission" && !subType) {
+      if((req.user.role === "Admission" || req.user.role === "Admin") && !subType) {
         emailReBookingAdmission({
           email: bookingToEmail,
           name: bookingToName,
@@ -259,7 +262,7 @@ const { bookingToEmail, bookingToName, bookingToLastName,
       })
       } 
 
-      if(req.user.role === "Admission" && subType) {
+      if((req.user.role === "Admission" || req.user.role === "Admin") && subType) {
         emailReBookingAdmissionType({
           email: bookingToEmail,
           name: bookingToName,
@@ -271,7 +274,7 @@ const { bookingToEmail, bookingToName, bookingToLastName,
           Hour: formattedHour,
       })
       } 
-
+    }
         res.json(newReBooking);
     } catch (error) {
         console.log(error)
@@ -294,7 +297,7 @@ const massiveReBooking = async (req, res) => {
       return res.status(404).json({ msg: "No se encontraron citas para los IDs proporcionados" });
     }
 
-    if (req.user.role !== "Admission") {
+    if (req.user.role !== "Admission" && req.user.role !== "Admin") {
       return res.status(403).json({ msg: "Acción no válida. Se requiere el rol de Admission" });
     }
 
@@ -342,7 +345,7 @@ const { bookingToEmail, bookingToName, bookingToLastName,
       return res.status(404).json({ msg: error.message });
     }
 
-    if (booking.bookingFor.toString() !== req.user._id.toString() && req.user.role !== "Admission") {
+    if (booking.bookingFor.toString() !== req.user._id.toString() && (req.user.role !== "Admission" && req.user.role !== "Admin")) {
       const error = new Error("ACCIÓN NO VALIDA");
       return res.status(403).json({msg: error.message});
     }
@@ -356,60 +359,61 @@ const { bookingToEmail, bookingToName, bookingToLastName,
     res.json(cancelBookingStatus);
 
     // If user create his own booking
+    if (email.trim() !== '') {
 
-  if(req.user.role === "User" && !subType) {
-    emailCancelBooking({
-      email: req.user.email,
-      name: req.user.name,
-      lastName: req.user.lastName,
-      Motive: Motive.replace(/Primera vez|Control/g, "").trim(),
-      Type: Type,
-      subType: subType,
-      Date: formattedDate,
-      Hour: formattedHour,
-  })
-  }
+      if(req.user.role === "User" && !subType) {
+        emailCancelBooking({
+          email: req.user.email,
+          name: req.user.name,
+          lastName: req.user.lastName,
+          Motive: Motive.replace(/Primera vez|Control/g, "").trim(),
+          Type: Type,
+          subType: subType,
+          Date: formattedDate,
+          Hour: formattedHour,
+      })
+      }
 
-  if(req.user.role === "User" && subType) {
-    emailCancelBookingType({
-      email: req.user.email,
-      name: req.user.name,
-      lastName: req.user.lastName,
-      Motive: Motive.replace(/Primera vez|Control/g, "").trim(),
-      Type: Type,
-      subType: subType,
-      Date: formattedDate,
-      Hour: formattedHour,
-  })
-  }
+      if(req.user.role === "User" && subType) {
+        emailCancelBookingType({
+          email: req.user.email,
+          name: req.user.name,
+          lastName: req.user.lastName,
+          Motive: Motive.replace(/Primera vez|Control/g, "").trim(),
+          Type: Type,
+          subType: subType,
+          Date: formattedDate,
+          Hour: formattedHour,
+      })
+      }
 
-  // If Admission create someone booking
+      // If Admission create someone booking
 
-    if(req.user.role === "Admission" && !subType) {
-      emailCancelBookingAdmission({
-        email: bookingToEmail,
-        name: bookingToName,
-        lastName: bookingToLastName,
-        Motive: Motive.replace(/Primera vez|Control/g, "").trim(),
-        Type: Type,
-        subType: subType,
-        Date: formattedDate,
-        Hour: formattedHour,
-    })
-    } 
+        if((req.user.role === "Admission" || req.user.role === "Admin") && !subType) {
+          emailCancelBookingAdmission({
+            email: bookingToEmail,
+            name: bookingToName,
+            lastName: bookingToLastName,
+            Motive: Motive.replace(/Primera vez|Control/g, "").trim(),
+            Type: Type,
+            subType: subType,
+            Date: formattedDate,
+            Hour: formattedHour,
+        })
+        } 
 
-    if(req.user.role === "Admission" && subType) {
-      emailCancelBookingAdmissionType({
-        email: bookingToEmail,
-        name: bookingToName,
-        lastName: bookingToLastName,
-        Motive: Motive.replace(/Primera vez|Control/g, "").trim(),
-        Type: Type,
-        subType: subType,
-        Date: formattedDate,
-        Hour: formattedHour,
-    })
-    } 
+        if((req.user.role === "Admission" || req.user.role === "Admin") && subType) {
+          emailCancelBookingAdmissionType({
+            email: bookingToEmail,
+            name: bookingToName,
+            lastName: bookingToLastName,
+            Motive: Motive.replace(/Primera vez|Control/g, "").trim(),
+            Type: Type,
+            subType: subType,
+            Date: formattedDate,
+            Hour: formattedHour,
+        })
+        } }
     
   } catch (error) {
     console.log(error);
@@ -436,7 +440,7 @@ const updateStatusUser = async (req, res) => {
         return res.status(404).json({ msg: error.message });
       }
 
-      if (booking.bookingFor.toString() !== req.user._id.toString() && req.user.role !== "Admission") {
+      if (booking.bookingFor.toString() !== req.user._id.toString() && (req.user.role !== "Admission" && req.user.role !== "Admin")) {
         const error = new Error("ACCIÓN NO VALIDA");
         return res.status(403).json({msg: error.message});
       }

@@ -7,7 +7,8 @@ import {
     cancelBookingAct,
     closeOfTheDay,
     statusChanged,
-    massiveReBookingAct
+    massiveReBookingAct,
+    subscriptionPlanAction
 } from "../controllers/ActionsController.js"
 
 const router = express.Router();
@@ -23,6 +24,10 @@ router
 router
 .route("/bookingcreated")
 .post(bookingCreated)
+
+router
+.route("/subscriptionplan")
+.post(subscriptionPlanAction)
 
 router
 .route("/editbookingact")

@@ -24,7 +24,6 @@ const bookingSchema = mongoose.Schema({
     },
     Type: {
         type: String,
-        required: true,
         trim: true,
     },
     subType: {
