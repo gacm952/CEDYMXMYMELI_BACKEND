@@ -29,7 +29,7 @@ const createBooking = async (req, res) => {
 
        // If user create his own booking
 
-       if (email.trim() !== '') {
+       if (bookingToEmail.trim() !== '') {
 
       if(req.user.role === "User" && !subType) {
         emailCreateBooking({
@@ -58,7 +58,7 @@ const createBooking = async (req, res) => {
           token: booking.token,
       })
 
-          scheduleReminderEmail({
+         scheduleReminderEmail({
           email: req.user.email,
           name: req.user.name,
           lastName: req.user.lastName,
@@ -72,7 +72,7 @@ const createBooking = async (req, res) => {
 
       // If Admission create someone booking
 
-        if((req.user.role === "Admission" || req.user.role === "role") && !subType) {
+        if((req.user.role === "Admission" || req.user.role === "Admin") && !subType) {
           emailCreateBookingAdmission({
             email: bookingToEmail,
             name: bookingToName,
@@ -94,10 +94,10 @@ const createBooking = async (req, res) => {
             subType: subType,
             Date: formattedDate,
             Hour: formattedHour,
-          })     
+          })    
       }
               
-        if((req.user.role === "Admission" || req.user.role === "role") && subType) {
+        if((req.user.role === "Admission" || req.user.role === "Admin") && subType) {
           emailCreateBookingAdmissionType({
             email: bookingToEmail,
             name: bookingToName,
@@ -218,7 +218,7 @@ const { bookingToEmail, bookingToName, bookingToLastName,
     const newReBooking = await booking.save();
 
      // If user create his own booking
-     if (email.trim() !== '') { 
+     if (bookingToEmail.trim() !== '') { 
 
 
     if(req.user.role === "User" && !subType) {
@@ -359,7 +359,7 @@ const { bookingToEmail, bookingToName, bookingToLastName,
     res.json(cancelBookingStatus);
 
     // If user create his own booking
-    if (email.trim() !== '') {
+    if (bookingToEmail.trim() !== '') {
 
       if(req.user.role === "User" && !subType) {
         emailCancelBooking({
