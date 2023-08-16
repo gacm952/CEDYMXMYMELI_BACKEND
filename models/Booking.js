@@ -9,6 +9,10 @@ const bookingSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
     },
+    doctorIdBooked: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+    },
     cancelledBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",

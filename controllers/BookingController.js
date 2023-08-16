@@ -58,7 +58,7 @@ const createBooking = async (req, res) => {
           token: booking.token,
       })
 
-         scheduleReminderEmail({
+        /* scheduleReminderEmail({
           email: req.user.email,
           name: req.user.name,
           lastName: req.user.lastName,
@@ -67,12 +67,12 @@ const createBooking = async (req, res) => {
           subType: subType,
           Date: formattedDate,
           Hour: formattedHour,
-      }) 
+      }) */
       }
 
       // If Admission create someone booking
 
-        if((req.user.role === "Admission" || req.user.role === "Admin") && !subType) {
+        if((req.user.role === "Admission" || req.user.role === "Admin" || req.user.role === "Doctor") && !subType) {
           emailCreateBookingAdmission({
             email: bookingToEmail,
             name: bookingToName,
@@ -85,7 +85,7 @@ const createBooking = async (req, res) => {
             token: booking.token,
         })
 
-          scheduleReminderEmail({
+        /*  scheduleReminderEmail({
             email: bookingToEmail,
             name: bookingToName,
             lastName: bookingToLastName,
@@ -94,10 +94,10 @@ const createBooking = async (req, res) => {
             subType: subType,
             Date: formattedDate,
             Hour: formattedHour,
-          })    
+          })  */  
       }
               
-        if((req.user.role === "Admission" || req.user.role === "Admin") && subType) {
+        if((req.user.role === "Admission" || req.user.role === "Admin" || req.user.role === "Doctor") && subType) {
           emailCreateBookingAdmissionType({
             email: bookingToEmail,
             name: bookingToName,
@@ -202,7 +202,7 @@ const { bookingToEmail, bookingToName, bookingToLastName,
       return res.status(404).json({ msg: error.message });
     }
 
-    if (booking.bookingFor.toString() !== req.user._id.toString() && (req.user.role !== "Admission" && req.user.role !== "Admin")) {
+    if (booking.bookingFor.toString() !== req.user._id.toString() && (req.user.role !== "Admission" && req.user.role !== "Admin" && req.user.role !== "Doctor")) {
       const error = new Error("ACCIÓN NO VALIDA");
       return res.status(403).json({msg: error.message});
     }
@@ -249,7 +249,7 @@ const { bookingToEmail, bookingToName, bookingToLastName,
 
     // If Admission create someone booking
 
-      if((req.user.role === "Admission" || req.user.role === "Admin") && !subType) {
+      if((req.user.role === "Admission" || req.user.role === "Admin" || req.user.role === "Doctor") && !subType) {
         emailReBookingAdmission({
           email: bookingToEmail,
           name: bookingToName,
@@ -262,7 +262,7 @@ const { bookingToEmail, bookingToName, bookingToLastName,
       })
       } 
 
-      if((req.user.role === "Admission" || req.user.role === "Admin") && subType) {
+      if((req.user.role === "Admission" || req.user.role === "Admin" || req.user.role === "Doctor") && subType) {
         emailReBookingAdmissionType({
           email: bookingToEmail,
           name: bookingToName,
@@ -297,7 +297,7 @@ const massiveReBooking = async (req, res) => {
       return res.status(404).json({ msg: "No se encontraron citas para los IDs proporcionados" });
     }
 
-    if (req.user.role !== "Admission" && req.user.role !== "Admin") {
+    if (req.user.role !== "Admission" && req.user.role !== "Admin" && req.user.role !== "Doctor") {
       return res.status(403).json({ msg: "Acción no válida. Se requiere el rol de Admission" });
     }
 
@@ -345,7 +345,7 @@ const { bookingToEmail, bookingToName, bookingToLastName,
       return res.status(404).json({ msg: error.message });
     }
 
-    if (booking.bookingFor.toString() !== req.user._id.toString() && (req.user.role !== "Admission" && req.user.role !== "Admin")) {
+    if (booking.bookingFor.toString() !== req.user._id.toString() && (req.user.role !== "Admission" && req.user.role !== "Admin" && req.user.role !== "Doctor")) {
       const error = new Error("ACCIÓN NO VALIDA");
       return res.status(403).json({msg: error.message});
     }
@@ -389,7 +389,7 @@ const { bookingToEmail, bookingToName, bookingToLastName,
 
       // If Admission create someone booking
 
-        if((req.user.role === "Admission" || req.user.role === "Admin") && !subType) {
+        if((req.user.role === "Admission" || req.user.role === "Admin" || req.user.role === "Doctor") && !subType) {
           emailCancelBookingAdmission({
             email: bookingToEmail,
             name: bookingToName,
@@ -402,7 +402,7 @@ const { bookingToEmail, bookingToName, bookingToLastName,
         })
         } 
 
-        if((req.user.role === "Admission" || req.user.role === "Admin") && subType) {
+        if((req.user.role === "Admission" || req.user.role === "Admin" || req.user.role === "Doctor") && subType) {
           emailCancelBookingAdmissionType({
             email: bookingToEmail,
             name: bookingToName,
@@ -440,7 +440,7 @@ const updateStatusUser = async (req, res) => {
         return res.status(404).json({ msg: error.message });
       }
 
-      if (booking.bookingFor.toString() !== req.user._id.toString() && (req.user.role !== "Admission" && req.user.role !== "Admin")) {
+      if (booking.bookingFor.toString() !== req.user._id.toString() && (req.user.role !== "Admission" && req.user.role !== "Admin" && req.user.role !== "Doctor")) {
         const error = new Error("ACCIÓN NO VALIDA");
         return res.status(403).json({msg: error.message});
       }

@@ -47,7 +47,7 @@ const register = async (req, res) => {
         }
 
         if (req.body.password === '') {
-            res.json({ msg: "Registro Exitoso" });
+            res.json({ msg: "Registro Exitoso", user });
           } else {
             res.json({ msg: "Usuario Creado Correctamente, Revisa tu Email para confirmar tu Cuenta" });
           }
