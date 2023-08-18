@@ -9,22 +9,12 @@ const DoctorsSchema = mongoose.Schema({
         type: String,
         ref: "User",
     },
-    Specialty: {
+    Especialidad: {
         type: String,
         required: true,
         trim: true,
     },
-    SchedulesAvailable: {
-        type: String,
-        required: true,
-        trim: true,
-    },
-    Clinic: {
-        type: String,
-        required: true,
-        trim: true,
-    },
-    Available: {
+    Active: {
         type: Boolean,
         required: true,
         trim: true,
