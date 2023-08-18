@@ -1,8 +1,6 @@
 import mongoose from "mongoose";
 import { getDailyDoctorModelForMonth } from "../models/MonthlyDoctors.js";
 
-mongoose.set('maxTimeMS', 30000);
-
 // Definir función simulada para obtener una cadena de mes y año
 function getMonthYearString(date) {
   const month = date.toLocaleString("default", { month: "long" });
@@ -10,21 +8,37 @@ function getMonthYearString(date) {
   return `${month.toUpperCase()}${year}`;
 }
 
-async function createDailyDataForDoctors(doctors, startDate, endDate, DailyDoctorModel) {
-  try {
-    for (const doctor of doctors) {
-      for (let currentDate = new Date(startDate); currentDate <= endDate; currentDate.setDate(currentDate.getDate() + 1)) {
-        const dailyData = {
-          doctorId: doctor.doctorId,
-          date: currentDate,
-          data: currentDate, // Agrega aquí la información específica para cada día
-        };
+async function createDailyDataInBatches(doctors, startDate, endDate, DailyDoctorModel, batchSize = 1) {
+  const batchData = [];
 
-        await DailyDoctorModel.create(dailyData);
+  for (const doctor of doctors) {
+    for (let currentDate = new Date(startDate); currentDate <= endDate; currentDate.setDate(currentDate.getDate() + 1)) {
+      const dailyData = {
+        doctorId: doctor.doctorId,
+        date: currentDate,
+        data: currentDate, // Agrega aquí la información específica para cada día
+      };
+
+      batchData.push(dailyData);
+
+      if (batchData.length >= batchSize) {
+        try {
+          await DailyDoctorModel.insertMany(batchData);
+          batchData.length = 0; // Limpiar el array de lotes
+        } catch (error) {
+          console.error("Error al crear datos diarios:", error);
+        }
       }
     }
-  } catch (error) {
-    console.error("Error al crear datos diarios:", error);
+  }
+
+  // Insertar los datos restantes si hay alguno
+  if (batchData.length > 0) {
+    try {
+      await DailyDoctorModel.insertMany(batchData);
+    } catch (error) {
+      console.error("Error al crear datos diarios:", error);
+    }
   }
 }
 
@@ -39,12 +53,10 @@ const nextMonthEndDate = new Date(currentDate.getFullYear(), currentDate.getMont
 
 async function createDataForCurrentAndNextMonth() {
   try {
-    await createDailyDataForDoctors(doctors, currentMonthStartDate, nextMonthEndDate, getDailyDoctorModelForMonth(nextMonthStartDate));
-    console.log("Datos diarios para el mes actual creados correctamente");
-
     const nextMonthModel = getDailyDoctorModelForMonth(nextMonthStartDate);
-    await createDailyDataForDoctors(doctors, nextMonthStartDate, nextMonthEndDate, nextMonthModel);
-    console.log("Datos diarios para el siguiente mes creados correctamente");
+
+    await createDailyDataInBatches(doctors, currentMonthStartDate, nextMonthEndDate, nextMonthModel);
+    console.log("Datos diarios para el mes actual y siguiente creados correctamente");
   } catch (error) {
     console.error("Error en la creación de datos diarios:", error);
   }
