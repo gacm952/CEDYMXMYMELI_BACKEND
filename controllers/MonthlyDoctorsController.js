@@ -45,7 +45,7 @@ async function createDailyDataInBatches(doctors, startDate, endDate, DailyDoctor
 }
 
 const doctors = [
-  { doctorId: new mongoose.Types.ObjectId("244324") },
+  { doctorId: new mongoose.Types.ObjectId(244324) },
 ];
 
 const currentDate = new Date();
