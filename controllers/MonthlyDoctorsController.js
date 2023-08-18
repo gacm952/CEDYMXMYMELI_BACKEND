@@ -23,7 +23,7 @@ async function createDailyDataForDoctors(doctors, startDate, endDate, DailyDocto
 }
 
 const doctors = [
-  { doctorId: new mongoose.Types.ObjectId("244324") },
+  { doctorId: new mongoose.Types.ObjectId(244324) },
 ];
 
 const currentDate = new Date();
