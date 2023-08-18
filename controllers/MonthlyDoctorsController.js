@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 import { getDailyDoctorModelForMonth } from "../models/MonthlyDoctors.js";
 
+mongoose.set('maxTimeMS', 30000);
+
 // Definir función simulada para obtener una cadena de mes y año
 function getMonthYearString(date) {
   const month = date.toLocaleString("default", { month: "long" });
@@ -43,7 +45,7 @@ async function createDailyDataInBatches(doctors, startDate, endDate, DailyDoctor
 }
 
 const doctors = [
-  { doctorId: new mongoose.Types.ObjectId(244324)},
+  { doctorId: new mongoose.Types.ObjectId("244324") },
 ];
 
 const currentDate = new Date();
@@ -51,15 +53,22 @@ const currentMonthStartDate = new Date(currentDate.getFullYear(), currentDate.ge
 const nextMonthStartDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
 const nextMonthEndDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 2, 0);
 
+const dailyDoctorModelForNextMonth = getDailyDoctorModelForMonth(nextMonthStartDate);
+
 async function createDataForCurrentAndNextMonth() {
   try {
-    const nextMonthModel = getDailyDoctorModelForMonth(nextMonthStartDate);
+    await createDailyDataForDoctors(doctors, currentMonthStartDate, nextMonthEndDate, getDailyDoctorModelForMonth(nextMonthStartDate));
+    console.log("Datos diarios para el mes actual creados correctamente");
 
-    await createDailyDataInBatches(doctors, currentMonthStartDate, nextMonthEndDate, nextMonthModel);
-    console.log("Datos diarios para el mes actual y siguiente creados correctamente");
+    const nextMonthModel = getDailyDoctorModelForMonth(nextMonthStartDate);
+    await createDailyDataForDoctors(doctors, nextMonthStartDate, nextMonthEndDate, nextMonthModel);
+    console.log("Datos diarios para el siguiente mes creados correctamente");
   } catch (error) {
     console.error("Error en la creación de datos diarios:", error);
   }
 }
 
-createDataForCurrentAndNextMonth();
+// Conectar a la base de datos antes de crear datos
+conectarDB().then(() => {
+  createDataForCurrentAndNextMonth();
+});
