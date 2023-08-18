@@ -1,14 +1,8 @@
 import mongoose from "mongoose";
 import { getDailyDoctorModelForMonth } from "../models/MonthlyDoctors.js";
+import conectarDB from "../config/db.js";
 
 mongoose.set('maxTimeMS', 30000);
-
-// Definir función simulada para obtener una cadena de mes y año
-function getMonthYearString(date) {
-  const month = date.toLocaleString("default", { month: "long" });
-  const year = date.getFullYear();
-  return `${month.toUpperCase()}${year}`;
-}
 
 async function createDailyDataForDoctors(doctors, startDate, endDate, DailyDoctorModel) {
   try {
@@ -29,7 +23,7 @@ async function createDailyDataForDoctors(doctors, startDate, endDate, DailyDocto
 }
 
 const doctors = [
-  { doctorId: new mongoose.Types.ObjectId(244324)},
+  { doctorId: new mongoose.Types.ObjectId("244324") },
 ];
 
 const currentDate = new Date();
@@ -37,17 +31,21 @@ const currentMonthStartDate = new Date(currentDate.getFullYear(), currentDate.ge
 const nextMonthStartDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
 const nextMonthEndDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 2, 0);
 
+const dailyDoctorModelForNextMonth = getDailyDoctorModelForMonth(nextMonthStartDate);
+
 async function createDataForCurrentAndNextMonth() {
   try {
-    await createDailyDataForDoctors(doctors, currentMonthStartDate, nextMonthEndDate, getDailyDoctorModelForMonth(nextMonthStartDate));
+    await createDailyDataForDoctors(doctors, currentMonthStartDate, nextMonthEndDate, dailyDoctorModelForNextMonth);
     console.log("Datos diarios para el mes actual creados correctamente");
 
-    const nextMonthModel = getDailyDoctorModelForMonth(nextMonthStartDate);
-    await createDailyDataForDoctors(doctors, nextMonthStartDate, nextMonthEndDate, nextMonthModel);
+    await createDailyDataForDoctors(doctors, nextMonthStartDate, nextMonthEndDate, dailyDoctorModelForNextMonth);
     console.log("Datos diarios para el siguiente mes creados correctamente");
   } catch (error) {
     console.error("Error en la creación de datos diarios:", error);
   }
 }
 
-createDataForCurrentAndNextMonth();
+// Conectar a la base de datos antes de crear datos
+conectarDB().then(() => {
+  createDataForCurrentAndNextMonth();
+});
