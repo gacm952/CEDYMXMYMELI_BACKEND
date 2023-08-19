@@ -13,9 +13,24 @@ const DailyDoctorSchema = mongoose.Schema(
       ref: "User",
     },
     date: {
+      type: Date,
+    },
+    Active: {
+      type: Boolean,
+      default: true
+    },
+    activeMorning: {
+      type: Boolean,
+      default: true
+    },
+    activeLate: {
+      type: Boolean,
+      default: true
+    },
+    morning: {
       type: String,
     },
-    data: {
+    late: {
       type: String,
     },
   },

@@ -23,6 +23,11 @@ const allDoctors = async (req, res) => {
   
 };
 
+const getAllDoctors = async () => {
+  const doctors = await Doctors.find({ Active: true });
+  return doctors;
+};
+
 const updateDataDoctor = async (req, res) => {
  
     const { id } = req.params;
@@ -65,5 +70,6 @@ const updateDataDoctor = async (req, res) => {
 export {
     newDoctor,
     allDoctors,
-    updateDataDoctor
+    updateDataDoctor,
+    getAllDoctors
 }
